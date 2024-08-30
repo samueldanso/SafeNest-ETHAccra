@@ -42,7 +42,7 @@ export const customEvmNetworks = [
     blockExplorerUrls: ["	https://sepolia-blockscout.lisk.com"],
     chainId: 4202,
     name: "Lisk Sepolia Testnet",
-    rpcUrls: ["	https://rpc.sepolia-api.lisk.com"],
+    rpcUrls: ["https://rpc.sepolia-api.lisk.com"],
     iconUrls: ["https://cryptologos.cc/logos/lisk-lsk-logo.png"],
     nativeCurrency: {
       name: "Ethereum",
