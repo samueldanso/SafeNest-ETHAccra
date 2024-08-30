@@ -6,20 +6,20 @@ import { ProcessBeam } from "~~/components/ProcessBeam";
 
 const components = [
   {
-    name: "Create",
-    description: "Configure easily your link.",
+    name: "Sign up",
+    description: "Sign up easily with email or google.",
     link: "https://docs.decash.link/docs/user-guide/create-link",
     component: ProcessBeam,
   },
   {
-    name: "Sign",
-    description: "Confirm the deposit and create a link.",
+    name: "Setup",
+    description: "Setup and account for your kid .",
     link: "https://docs.decash.link/docs/user-guide/create-link#make-the-deposit",
     component: ProcessBeam,
   },
   {
-    name: "Send",
-    description: "Share with anybody.",
+    name: "Save",
+    description: "Starting saving for your kids.",
     link: "https://docs.decash.link/docs/user-guide/create-link#share-link",
     component: ProcessBeam,
   },
