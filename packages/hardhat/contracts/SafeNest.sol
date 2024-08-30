@@ -29,10 +29,10 @@ contract SafeNest is Ownable, ReentrancyGuard {
      * @dev Constructor that sets the address of the USDC token contract.
      * @param _usdcToken Address of the USDC token contract.
      */
-    constructor(address _usdcToken) {
-        require(_usdcToken != address(0), "Invalid USDC token address");
-        usdcToken = IERC20(_usdcToken);
-    }
+    constructor(address _usdcToken) Ownable(msg.sender) {
+    require(_usdcToken != address(0), "Invalid USDC token address");
+    usdcToken = IERC20(_usdcToken);
+}
 
     /**
      * @dev Creates a new child account.
