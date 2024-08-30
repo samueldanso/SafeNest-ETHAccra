@@ -1,9 +1,9 @@
 "use client";
 
 import type { NextPage } from "next";
-import FirstSection from "~~/components/FirstSelection";
-import HeroSection from "~~/components/HeroSection";
-import ProtocolsUsed from "~~/components/ProtocolUsed";
+import FirstSection from "~~/components/landing/FirstSelection";
+import HeroSection from "~~/components/landing/HeroSection";
+import ProtocolsUsed from "~~/components/landing/ProtocolUsed";
 import DotPattern from "~~/components/magicui/dot-pattern";
 import { cn } from "~~/lib/utils";
 
