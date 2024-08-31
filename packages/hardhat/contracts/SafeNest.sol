@@ -25,7 +25,11 @@ contract SafeNest is Ownable, ReentrancyGuard {
         bool exists;
     }
 
-    mapping(address child => mapping(bytes32 => ChildAccount)) public childAccounts;
+      /// @dev Mapping from parent address to child ID to ChildAccount.
+    mapping(address => mapping(bytes32 => ChildAccount)) private childAccounts;
+
+    /// @dev Mapping from parent address to child ID to emergency withdrawal request timestamp.
+    mapping(address => mapping(bytes32 => uint256)) private emergencyWithdrawalRequests;
 
     event ChildAccountCreated(address indexed parent, bytes32 indexed childId, uint256 withdrawalDate);
     event Deposit(address indexed parent, bytes32 indexed childId, uint256 amount);
