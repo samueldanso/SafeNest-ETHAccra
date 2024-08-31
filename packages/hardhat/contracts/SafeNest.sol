@@ -31,10 +31,37 @@ contract SafeNest is Ownable, ReentrancyGuard {
     /// @dev Mapping from parent address to child ID to emergency withdrawal request timestamp.
     mapping(address => mapping(bytes32 => uint256)) private emergencyWithdrawalRequests;
 
+       /// @notice Emitted when a new child account is created.
+    /// @param parent The address of the parent who created the account.
+    /// @param childId The unique identifier for the child.
+    /// @param withdrawalDate The date when the child can access the funds.
     event ChildAccountCreated(address indexed parent, bytes32 indexed childId, uint256 withdrawalDate);
+
+    /// @notice Emitted when USDC is deposited into a child's account.
+    /// @param parent The address of the parent who made the deposit.
+    /// @param childId The unique identifier for the child.
+    /// @param amount The amount of USDC deposited.
     event Deposit(address indexed parent, bytes32 indexed childId, uint256 amount);
+
+    /// @notice Emitted when USDC is withdrawn from a child's account.
+    /// @param recipient The address that received the withdrawn funds.
+    /// @param childId The unique identifier for the child.
+    /// @param amount The amount of USDC withdrawn.
     event Withdrawal(address indexed recipient, bytes32 indexed childId, uint256 amount);
-    event EmergencyWithdrawal(address indexed parent, bytes32 indexed childId, uint256 amount);
+
+    /// @notice Emitted when an emergency withdrawal is requested.
+    /// @param parent The address of the parent who requested the emergency withdrawal.
+    /// @param childId The unique identifier for the child.
+    /// @param amount The amount of USDC requested for emergency withdrawal.
+    /// @param requestTime The timestamp when the emergency withdrawal request was made.
+    event EmergencyWithdrawalRequested(address indexed parent, bytes32 indexed childId, uint256 amount, uint256 requestTime);
+
+    /// @notice Emitted when an emergency withdrawal is executed.
+    /// @param parent The address of the parent who executed the emergency withdrawal.
+    /// @param childId The unique identifier for the child.
+    /// @param amount The amount of USDC withdrawn in the emergency.
+    event EmergencyWithdrawalExecuted(address indexed parent, bytes32 indexed childId, uint256 amount);
+
 
     /**
      * @dev Constructor that sets the address of the USDC token contract.
