@@ -1,26 +1,17 @@
-import Link from "next/link";
-import { Button } from "../ui/button";
+import { DynamicWidget } from "@dynamic-labs/sdk-react-core";
 
 export default function HeroSection() {
   return (
-    <section id="hero" className="mx-auto my-20 w-fit rounded-full bg-white px-8 py-5">
-      <div className="mx-auto w-full max-w-2xl">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex flex-1 flex-col items-center">
-            <h1 className="text-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-              Fast, smart decentralized stablecoin savings
-            </h1>
-            <p className="mt-6 max-w-[600px] text-center text-muted-foreground md:text-xl">
-              Save USDC for your child's future
-            </p>
-          </div>
-        </div>
-        <div className="my-5 flex justify-center gap-5">
-          <Link href="/app">
-            <Button size={"lg"} className="flex items-center gap-2">
-              Sign Up
-            </Button>
-          </Link>
+    <section id="hero" className="bg-gradient-to-r from-blue-500 to-purple-600 py-20">
+      <div className="container mx-auto px-4">
+        <div className="max-w-2xl mx-auto text-center text-white">
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl mb-6">
+            Fast, smart decentralized stablecoin savings
+          </h1>
+          <p className="text-xl mb-8">Save USDC for your child's future</p>
+          <DynamicWidget buttonClassName="bg-white text-blue-600 font-bold py-3 px-6 rounded-full text-lg hover:bg-blue-100 transition duration-300">
+            Sign Up
+          </DynamicWidget>
         </div>
       </div>
     </section>

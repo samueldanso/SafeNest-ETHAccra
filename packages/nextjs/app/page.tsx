@@ -1,19 +1,21 @@
 "use client";
 
 import type { NextPage } from "next";
-import FirstSection from "~~/components/landing/FirstSelection";
+import FAQ from "~~/components/landing/FAQ";
 import HeroSection from "~~/components/landing/HeroSection";
-import ProtocolsUsed from "~~/components/landing/ProtocolUsed";
+import FirstSection from "~~/components/landing/HowItWorks";
+import ProtocolsUsed from "~~/components/landing/Sponsors";
 import DotPattern from "~~/components/magicui/dot-pattern";
 import { cn } from "~~/lib/utils";
 
 const Home: NextPage = () => {
   return (
-    <main className="my-10 flex min-h-screen flex-col">
+    <main className="my-10 flex min-h-screen flex-col bg-gradient-to-br from-white via-lime-200 to-lime-100 backdrop-blur-3xl">
       <div className="mx-auto w-full max-w-6xl">
         <HeroSection />
         <ProtocolsUsed />
         <FirstSection />
+        <FAQ />
       </div>
       <DotPattern
         width={40}

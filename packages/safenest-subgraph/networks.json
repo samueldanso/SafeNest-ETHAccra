@@ -1,8 +1,0 @@
-{
-  "optimism-sepolia": {
-    "SafeNest": {
-      "address": "0x939Dc4B20BAB0F0786F88273c08F620E085285eC",
-      "startBlock": 16633562
-    }
-  }
-}
