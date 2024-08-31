@@ -1,6 +1,6 @@
 # SafeNest - Web3 Smart Savings Platform for Children
 
-![](./banner.png) // change banner
+![](./banner.png) 
 
 <h4 align="center">
 <a href="https://smartsaver.gitbook.io/smartsaver/">Documentation</a>
