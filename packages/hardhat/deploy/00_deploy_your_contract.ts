@@ -2,43 +2,44 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { Contract } from "ethers";
 
+// USDC addresses for the specified networks
+const USDC_ADDRESSES: { [key: string]: string } = {
+  sepolia: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+  "optimism-sepolia": "0x5fd84259d66Cd46123540766Be93DFE6D43130D7",
+  "lisk-sepolia": "0x348D43dD0186e7dD2494E8E115D6B611498f7eE0",
+};
+
 /**
- * Deploys a contract named "YourContract" using the deployer account and
- * constructor arguments set to the deployer address
+ * Deploys a contract named "SafeNest" using the deployer account and
+ * constructor arguments set to the USDC address for the given network
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  /*
-    On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
-
-    When deploying to live networks (e.g `yarn deploy --network sepolia`), the deployer account
-    should have sufficient balance to pay for the gas fees for contract creation.
-
-    You can generate a random account with `yarn generate` which will fill DEPLOYER_PRIVATE_KEY
-    with a random private key in the .env file (then used on hardhat.config.ts)
-    You can run the `yarn account` command to check your balance in every network.
-  */
+const deploySafeNest: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  const networkName = hre.network.name;
+  const usdcAddress = USDC_ADDRESSES[networkName];
+
+  if (!usdcAddress) {
+    throw new Error(
+      `Unsupported network: ${networkName}. Please deploy on Sepolia, Optimism Sepolia, or Lisk Sepolia.`,
+    );
+  }
+
+  console.log(`Deploying SafeNest to ${networkName} with USDC address: ${usdcAddress}`);
+
+  await deploy("SafeNest", {
     from: deployer,
-    // Contract constructor arguments
-    args: [deployer],
+    args: [usdcAddress],
     log: true,
-    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
-    // automatically mining the contract deployment transaction. There is no effect on live networks.
     autoMine: true,
   });
 
   // Get the deployed contract to interact with it after deploying.
-  const yourContract = await hre.ethers.getContract<Contract>("YourContract", deployer);
-  console.log("👋 Initial greeting:", await yourContract.greeting());
+  const safeNest = await hre.ethers.getContract<Contract>("SafeNest", deployer);
+  console.log("SafeNest deployed. USDC address:", await safeNest.usdcToken());
 };
 
-export default deployYourContract;
-
-// Tags are useful if you have multiple deploy files and only want to run one of them.
-// e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+export default deploySafeNest;
