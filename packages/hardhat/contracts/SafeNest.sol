@@ -13,9 +13,15 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract SafeNest is Ownable, ReentrancyGuard {
     IERC20 public immutable usdcToken;
 
+    /// @notice Stores information about a child's account.
+    /// @dev `balance` is the total amount of USDC saved for the child.
+    /// @dev `withdrawalDate` is the date when the child can access the funds (e.g., 18th birthday).
+    /// @dev `child` is the address of the child who will receive the funds.
+    /// @dev `exists` indicates if the account has been created.
     struct ChildAccount {
         uint256 balance;
         uint256 withdrawalDate;
+        address child;
         bool exists;
     }
 
