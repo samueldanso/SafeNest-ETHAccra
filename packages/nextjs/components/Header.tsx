@@ -26,13 +26,13 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: <BugAntIcon className="h-4 w-4" />,
   },
   {
-    label: "Smart Wallet",
-    href: "/safe",
+    label: "How it Works",
+    href: "#how-it-works",
     icon: <WalletIcon className="h-4 w-4" />,
   },
   {
-    label: "Data Storage",
-    href: "/fvm",
+    label: "FAQ",
+    href: "#faqs",
     icon: <CircleStackIcon className="h-4 w-4" />,
   },
 ];
