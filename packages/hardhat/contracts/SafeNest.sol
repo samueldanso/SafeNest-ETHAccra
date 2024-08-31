@@ -67,33 +67,42 @@ contract SafeNest is Ownable, ReentrancyGuard {
      * @dev Constructor that sets the address of the USDC token contract.
      * @param _usdcToken Address of the USDC token contract.
      */
+
+     /**
+     * @notice Initializes the contract with the USDC token address.
+     * @param _usdcToken The address of the USDC token contract.
+     */
     constructor(address _usdcToken) Ownable(msg.sender) {
-    require(_usdcToken != address(0), "Invalid USDC token address");
-    usdcToken = IERC20(_usdcToken);
-}
+        require(_usdcToken != address(0), "Invalid USDC token address");
+        usdcToken = IERC20(_usdcToken);
+    }
+
 
     /**
-     * @dev Creates a new child account.
-     * @param childId Unique identifier for the child (generated off-chain).
-     * @param withdrawalDate Timestamp when the child can withdraw funds (18th birthday).
+     * @notice Creates a new savings account for a child.
+     * @param childId A unique identifier for the child, generated off-chain.
+     * @param child The address of the child's wallet.
+     * @param withdrawalDate The date when the child can access the funds.
      */
-    function createChildAccount(bytes32 childId, uint256 withdrawalDate) external {
+    function createChildAccount(bytes32 childId, address child, uint256 withdrawalDate) external {
+        require(child != address(0), "Invalid child address");
         require(!childAccounts[msg.sender][childId].exists, "Child account already exists");
         require(withdrawalDate > block.timestamp, "Withdrawal date must be in the future");
 
         childAccounts[msg.sender][childId] = ChildAccount({
             balance: 0,
             withdrawalDate: withdrawalDate,
-            exists: true
+            exists: true,
+            child: child
         });
 
         emit ChildAccountCreated(msg.sender, childId, withdrawalDate);
     }
 
     /**
-     * @dev Deposits USDC into a child's account.
-     * @param childId Unique identifier of the child.
-     * @param amount Amount of USDC to deposit.
+     * @notice Deposits USDC into a child's account.
+     * @param childId The unique identifier of the child's account.
+     * @param amount The amount of USDC to deposit.
      */
     function deposit(bytes32 childId, uint256 amount) external nonReentrant {
         require(childAccounts[msg.sender][childId].exists, "Child account does not exist");
@@ -105,9 +114,9 @@ contract SafeNest is Ownable, ReentrancyGuard {
     }
 
     /**
-     * @dev Withdraws the entire balance for a child who has reached the withdrawal date.
-     * @param parent Address of the parent.
-     * @param childId Unique identifier of the child.
+     * @notice Withdraws the entire balance from a child's account.
+     * @param parent The address of the parent.
+     * @param childId The unique identifier of the child's account.
      */
     function withdraw(address parent, bytes32 childId) external nonReentrant {
         ChildAccount storage account = childAccounts[parent][childId];
@@ -118,30 +127,54 @@ contract SafeNest is Ownable, ReentrancyGuard {
         uint256 amount = account.balance;
         account.balance = 0;
 
+        require(msg.sender == parent || msg.sender == account.child, "Not authorized to withdraw");
         require(usdcToken.transfer(msg.sender, amount), "USDC transfer failed");
+
         emit Withdrawal(msg.sender, childId, amount);
     }
 
     /**
-     * @dev Allows the parent to make an emergency withdrawal.
-     * @param childId Unique identifier of the child.
-     * @param amount Amount to withdraw.
+     * @notice Requests an emergency withdrawal from a child's account.
+     * @param childId The unique identifier of the child's account.
+     * @param amount The amount of USDC to withdraw.
      */
-    function emergencyWithdraw(bytes32 childId, uint256 amount) external nonReentrant {
+    function requestEmergencyWithdrawal(bytes32 childId, uint256 amount) external {
+        ChildAccount storage account = childAccounts[msg.sender][childId];
+        require(account.exists, "Child account does not exist");
+        require(amount > 0 && amount <= account.balance, "Invalid withdrawal amount");
+
+        uint256 requestTime = block.timestamp + EMERGENCY_WITHDRAWAL_DELAY;
+        emergencyWithdrawalRequests[msg.sender][childId] = requestTime;
+
+        emit EmergencyWithdrawalRequested(msg.sender, childId, amount, requestTime);
+    }
+
+    /**
+     * @notice Executes an emergency withdrawal after the delay period.
+     * @param childId The unique identifier of the child's account.
+     * @param amount The amount of USDC to withdraw.
+     */
+    function executeEmergencyWithdrawal(bytes32 childId, uint256 amount) external nonReentrant {
+        uint256 requestTime = emergencyWithdrawalRequests[msg.sender][childId];
+        require(requestTime != 0, "No emergency withdrawal requested");
+        require(block.timestamp >= requestTime, "Withdrawal delay not met");
+
         ChildAccount storage account = childAccounts[msg.sender][childId];
         require(account.exists, "Child account does not exist");
         require(amount > 0 && amount <= account.balance, "Invalid withdrawal amount");
 
         account.balance -= amount;
+        emergencyWithdrawalRequests[msg.sender][childId] = 0;
+
         require(usdcToken.transfer(msg.sender, amount), "USDC transfer failed");
-        emit EmergencyWithdrawal(msg.sender, childId, amount);
+        emit EmergencyWithdrawalExecuted(msg.sender, childId, amount);
     }
 
     /**
-     * @dev Retrieves the balance of a child's account.
-     * @param parent Address of the parent.
-     * @param childId Unique identifier of the child.
-     * @return balance Current balance of the child's account.
+     * @notice Retrieves the balance of a child's account.
+     * @param parent The address of the parent.
+     * @param childId The unique identifier of the child's account.
+     * @return balance The current balance of the child's account.
      */
     function getChildBalance(address parent, bytes32 childId) external view returns (uint256 balance) {
         require(childAccounts[parent][childId].exists, "Child account does not exist");
@@ -149,10 +182,10 @@ contract SafeNest is Ownable, ReentrancyGuard {
     }
 
     /**
-     * @dev Retrieves the withdrawal date of a child's account.
-     * @param parent Address of the parent.
-     * @param childId Unique identifier of the child.
-     * @return withdrawalDate Timestamp when the child can withdraw funds.
+     * @notice Retrieves the withdrawal date of a child's account.
+     * @param parent The address of the parent.
+     * @param childId The unique identifier of the child's account.
+     * @return withdrawalDate The date when the child can withdraw funds.
      */
     function getWithdrawalDate(address parent, bytes32 childId) external view returns (uint256 withdrawalDate) {
         require(childAccounts[parent][childId].exists, "Child account does not exist");
