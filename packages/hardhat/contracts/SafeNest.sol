@@ -11,7 +11,11 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
  * @dev Implements time-locked savings accounts with support for emergency withdrawals.
  */
 contract SafeNest is Ownable, ReentrancyGuard {
+    /// @dev The address of the USDC token contract.
     IERC20 public immutable usdcToken;
+
+    /// @dev The delay for emergency withdrawals.
+    uint256 public constant EMERGENCY_WITHDRAWAL_DELAY = 3 days;
 
     /// @notice Stores information about a child's account.
     /// @dev `balance` is the total amount of USDC saved for the child.
@@ -25,13 +29,13 @@ contract SafeNest is Ownable, ReentrancyGuard {
         bool exists;
     }
 
-      /// @dev Mapping from parent address to child ID to ChildAccount.
+    /// @dev Mapping from parent address to child ID to ChildAccount.
     mapping(address => mapping(bytes32 => ChildAccount)) private childAccounts;
 
     /// @dev Mapping from parent address to child ID to emergency withdrawal request timestamp.
     mapping(address => mapping(bytes32 => uint256)) private emergencyWithdrawalRequests;
 
-       /// @notice Emitted when a new child account is created.
+    /// @notice Emitted when a new child account is created.
     /// @param parent The address of the parent who created the account.
     /// @param childId The unique identifier for the child.
     /// @param withdrawalDate The date when the child can access the funds.
@@ -62,13 +66,7 @@ contract SafeNest is Ownable, ReentrancyGuard {
     /// @param amount The amount of USDC withdrawn in the emergency.
     event EmergencyWithdrawalExecuted(address indexed parent, bytes32 indexed childId, uint256 amount);
 
-
     /**
-     * @dev Constructor that sets the address of the USDC token contract.
-     * @param _usdcToken Address of the USDC token contract.
-     */
-
-     /**
      * @notice Initializes the contract with the USDC token address.
      * @param _usdcToken The address of the USDC token contract.
      */
@@ -76,7 +74,6 @@ contract SafeNest is Ownable, ReentrancyGuard {
         require(_usdcToken != address(0), "Invalid USDC token address");
         usdcToken = IERC20(_usdcToken);
     }
-
 
     /**
      * @notice Creates a new savings account for a child.
