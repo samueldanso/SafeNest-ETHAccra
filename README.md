@@ -129,7 +129,7 @@ Visit your app on: `http://localhost:3000`. You can interact with your smart con
 
 Now that we have spun up our blockchain, started our frontend application and deployed our smart contract, we can start setting up our subgraph and utilize The Graph!
 
-> Before following these steps be sure Docker is running!
+> Before following these steps be sure Docker is running
 
 #### ✅ Step 1: Clean up any old data and spin up our docker containers ✅
 
@@ -207,11 +207,11 @@ yarn local-ship
 
 > This command does the following all in one… 🚀🚀🚀
 
-- Copies the contracts ABI from the hardhat/deployments folder
-- Generates the networks.json file
-- Generates AssemblyScript types from the subgraph schema and the contract ABIs.
-- Compiles and checks the mapping functions.
-- … and deploy a local subgraph!
+-   Copies the contracts ABI from the hardhat/deployments folder
+-   Generates the networks.json file
+-   Generates AssemblyScript types from the subgraph schema and the contract ABIs.
+-   Compiles and checks the mapping functions.
+-   … and deploy a local subgraph!
 
 > If you get an error ts-node you can install it with the following command
 
@@ -259,7 +259,6 @@ Go ahead and head over to your subgraph endpoint and take a look!
 Matchstick is a [unit testing framework](https://thegraph.com/docs/en/developing/unit-testing-framework/), developed by [LimeChain](https://limechain.tech/), that enables subgraph developers to test their mapping logic in a sandboxed environment and deploy their subgraphs with confidence!
 
 The project comes with a pre-written test located in `packages/subgraph/tests/asserts.test.ts`
-
 
 ## Documentation
 
