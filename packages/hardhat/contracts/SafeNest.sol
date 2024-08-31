@@ -7,7 +7,8 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /**
  * @title SafeNest
- * @dev A smart contract for parents to save USDC for their children until they turn 18.
+ * @notice A smart contract that allows parents to save USDC for their children until they turn 18.
+ * @dev Implements time-locked savings accounts with support for emergency withdrawals.
  */
 contract SafeNest is Ownable, ReentrancyGuard {
     IERC20 public immutable usdcToken;
