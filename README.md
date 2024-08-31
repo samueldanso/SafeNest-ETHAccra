@@ -3,8 +3,7 @@
 ![](./banner.png) // change banner
 
 <h4 align="center">
-<a href="">Documentation</a>
-  <a href="https://www.youtube.com/watch?v=dkONR9dJD2g">Video Walkthrough</a>
+<a href="https://smartsaver.gitbook.io/smartsaver/">Documentation</a>
 </h4>
 
 ## Overview
@@ -124,6 +123,143 @@ Visit your app on: `http://localhost:3000`. You can interact with your smart con
 -   Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
 -   Edit your deployment scripts in `packages/hardhat/deploy`
 -   Edit your smart contract test in: `packages/hardhat/test`. To run test use `yarn hardhat:test`
+-
+
+## 🚀 Setup The Graph Integration
+
+Now that we have spun up our blockchain, started our frontend application and deployed our smart contract, we can start setting up our subgraph and utilize The Graph!
+
+> Before following these steps be sure Docker is running!
+
+#### ✅ Step 1: Clean up any old data and spin up our docker containers ✅
+
+First run the following to clean up any old data. Do this if you need to reset everything.
+
+```
+yarn clean-node
+```
+
+> We can now spin up a graph node by running the following command… 🧑‍🚀
+
+```
+yarn run-node
+```
+
+This will spin up all the containers for The Graph using docker-compose. You will want to keep this window open at all times so that you can see log output from Docker.
+
+> As stated before, be sure to keep this window open so that you can see any log output from Docker. 🔎
+
+> NOTE FOR LINUX USERS: If you are running Linux you will need some additional changes to the project.
+
+##### Linux Only
+
+**For hardhat**
+
+Update your package.json in packages/hardhat with the following command line option for the hardhat chain.
+
+```
+"chain": "hardhat node --network hardhat --no-deploy --hostname 0.0.0.0"
+```
+
+**For foundry**
+
+Update your package.json in packages/foundry with the following command line option for the anvil chain.
+
+```
+"chain": "anvil --host 0.0.0.0 --config-out localhost.json",
+```
+
+Save the file and then restart your chain in its original window.
+
+```
+yarn chain
+```
+
+Redeploy your smart contracts.
+
+```
+yarn deploy
+```
+
+You might also need to add a firewall exception for port 8432. As an example for Ubuntu... run the following command.
+
+```
+sudo ufw allow 8545/tcp
+```
+
+#### ✅ Step 2: Create and ship our subgraph ✅
+
+Now we can open up a fifth window to finish setting up The Graph. 😅 In this fifth window we will create our local subgraph!
+
+> Note: You will only need to do this once.
+
+```
+yarn local-create
+```
+
+> You should see some output stating your subgraph has been created along with a log output on your graph-node inside docker.
+
+Next we will ship our subgraph! You will need to give your subgraph a version after executing this command. (e.g. 0.0.1).
+
+```
+yarn local-ship
+```
+
+> This command does the following all in one… 🚀🚀🚀
+
+- Copies the contracts ABI from the hardhat/deployments folder
+- Generates the networks.json file
+- Generates AssemblyScript types from the subgraph schema and the contract ABIs.
+- Compiles and checks the mapping functions.
+- … and deploy a local subgraph!
+
+> If you get an error ts-node you can install it with the following command
+
+```
+npm install -g ts-node
+```
+
+You should get a build completed output along with the address of your Subgraph endpoint.
+
+```
+Build completed: QmYdGWsVSUYTd1dJnqn84kJkDggc2GD9RZWK5xLVEMB9iP
+
+Deployed to http://localhost:8000/subgraphs/name/scaffold-eth/your-contract/graphql
+
+Subgraph endpoints:
+Queries (HTTP):     http://localhost:8000/subgraphs/name/scaffold-eth/your-contract
+```
+
+#### ✅ Step 3: Test your Subgraph ✅
+
+Go ahead and head over to your subgraph endpoint and take a look!
+
+> Here is an example query…
+
+```
+  {
+    greetings(first: 25, orderBy: createdAt, orderDirection: desc) {
+      id
+      greeting
+      premium
+      value
+      createdAt
+      sender {
+        address
+        greetingCount
+      }
+    }
+  }
+```
+
+> If all is well and you’ve sent a transaction to your smart contract then you will see a similar data output!
+
+#### ✅ Side Quest: Run a Matchstick Test ✅
+
+Matchstick is a [unit testing framework](https://thegraph.com/docs/en/developing/unit-testing-framework/), developed by [LimeChain](https://limechain.tech/), that enables subgraph developers to test their mapping logic in a sandboxed environment and deploy their subgraphs with confidence!
+
+The project comes with a pre-written test located in `packages/subgraph/tests/asserts.test.ts`
+
 
 ## Documentation
 
