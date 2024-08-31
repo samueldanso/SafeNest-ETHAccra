@@ -1,21 +1,78 @@
-# 🏗 Scaffold-ETH 2
+# SafeNest - Web3 Smart Savings Platform for Children
+
+![](./banner.png) // change banner
 
 <h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
+<a href="">Documentation</a>
+  <a href="https://www.youtube.com/watch?v=dkONR9dJD2g">Video Walkthrough</a>
 </h4>
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+## Overview
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+Netsafe is a Web3-based savings platform designed to help parents in high-inflation economies secure their children's financial future. By using blockchain technology and stablecoins, Netsafe ensures that savings are protected from inflation and can only be accessed by the child when they turn 18. Our platform is easy to use, combining advanced technology with a user-friendly interface to make saving both simple and secure.
 
--   ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
--   🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
--   🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
--   🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
--   🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+## Features
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+-   **Seamless Onboarding**: Quick account creation for children using email or social logins.
+-   **Time-Locked Savings**: Funds are securely locked until the child turns 18, ensuring long-term savings.
+-   **Savings Goals**: Set and track progress toward specific financial objectives like "New Bike" or "College Fund".
+-   **Emergency Withdrawals**: Allows access to funds in urgent situations with proper authorization.
+-   **User-Friendly Interface**: Intuitive design for easy navigation and management of savings.
+-   **Stablecoin Integration**: Utilizes stablecoins to protect savings against inflation.
+
+## Technologies Used
+
+### Frontend
+
+-   **React** and **Next.js**: For building a responsive and dynamic user interface.
+-   **Tailwind CSS**: For efficient and customizable styling.
+
+### Smart Contracts
+
+-   **Solidity**: Smart contract development language.
+-   **Foundry**: Development framework for testing and deployment.
+
+### Blockchain Integration
+
+-   **The Graph**: For efficient blockchain data indexing and querying.
+-   **Optimism**: Deployed on the OP Sepolia testnet.
+-   **Lisk**: Deployed on the Lisk Sepolia testnet.
+-   **Dynamic**: Implementing social login functionality.
+
+## How It Works
+
+Netsafe leverages blockchain technology to create a secure and transparent savings platform:
+
+1. **Account Creation**: Parents can easily create accounts for their children using email or social logins, powered by Dynamic for a seamless onboarding experience.
+
+2. **Time-Locked Savings**: Our smart contracts implement a timelock mechanism that restricts access to funds until the child turns 18. This is achieved through:
+
+    - Storing the child's birth date securely on-chain.
+    - Implementing time-based conditions in the withdrawal functions.
+
+3. **Savings Goals**: Parents can set specific savings goals within the platform. The smart contract tracks contributions and calculates progress toward each goal.
+
+4. **Stablecoin Integration**: To combat inflation, all savings are stored in stablecoins. This provides a stable value over time, protecting the savings from currency fluctuations.
+
+5. **Emergency Withdrawals**: A carefully designed authorization system allows for emergency withdrawals. This involves:
+    - Multi-signature approval process.
+    - Timelocks to prevent immediate withdrawals.
+    - Logging of withdrawal reasons for transparency.
+
+## Smart Contract Implementation
+
+Our smart contracts form the backbone of Netsafe's functionality:
+
+| Contract     | Description                                            | Optimism Sepolia (CA)                      | Lisk Sepolia (CA)                          |
+| ------------ | ------------------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
+| SafeNest.sol | Main contract handling savings, goals, and withdrawals | 0x939Dc4B20BAB0F0786F88273c08F620E085285eC | 0x939Dc4B20BAB0F0786F88273c08F620E085285eC |
+
+The `SafeNest.sol` contract includes:
+
+-   Functions for depositing and withdrawing funds.
+-   Logic for setting and tracking savings goals.
+-   Time-lock mechanisms for fund protection.
+-   Emergency withdrawal protocols with proper authorization checks.
 
 ## Requirements
 
